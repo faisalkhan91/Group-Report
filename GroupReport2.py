@@ -43,10 +43,22 @@ def get_file():
 
 def process_data(pdata, pdata2):
 
-    group, group_id, guser_id = pdata.split(':')
-    user, user_id, primary_group = pdata2.split(':')
+    group = {}
+    guser_id = {}
+    user = {}
+    primary_group = {}
 
-    return group, group_id, guser_id, user, user_id, primary_group
+    for line in pdata:
+        tmp_group, tmp_group_id, tmp_guser_id = line.split(':')
+        group[tmp_group_id] = tmp_group
+        guser_id[tmp_group_id] = tmp_guser_id
+
+    for line in pdata2:
+        tmp_user, tmp_user_id, tmp_primary_group = line.split(':')
+        user[tmp_user] = tmp_user_id
+        primary_group[tmp_user_id] = tmp_primary_group
+
+    return group, guser_id, user, primary_group
 
 
 #############################################################################################
@@ -55,10 +67,15 @@ def process_data(pdata, pdata2):
 
 
 data, data2 = get_file()
-group, group_id, guser_id, user, user_id, primary_group = process_data(data, data2)
-print(group, group_id, guser_id, user, user_id, primary_group)
+group, guser_id, user, primary_group = process_data(data, data2)
+# print(group)
+# print(guser_id)
+# print(user)
+# print(primary_group)
 
-
+print("### USER ########## USER_ID ########### PRIMARY_GROUP ###########")
+for user, user_id in user.items():
+    print(user, "                 ", user_id, "              ", group[primary_group[user_id]])
 
 #############################################################################################
 #                                       End of Program                                      #
